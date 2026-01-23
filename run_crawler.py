@@ -139,7 +139,7 @@ def chrome_worker(worker_id, task_queue, result_dict, config, stop_event):
                 ov.end()
                 logger.info(f"[Worker-{worker_id}] 爬取完成, 节点数={node_count}")
 
-                # 下载文件
+                # 下载文件（流式上传，不保存到本地）
                 file_nodes = target_db.get_file_nodes(task_id, pruned_only=True)
                 downloaded_count = 0
 
@@ -153,11 +153,17 @@ def chrome_worker(worker_id, task_queue, result_dict, config, stop_event):
                             file_extension=node.file_extension
                         )
 
-                        result = downloader.download_file(node.url, task_folder=f"task_{task_id}")
+                        # 下载到内存
+                        result = downloader.download_to_memory(node.url)
 
-                        if result.success:
+                        if result.success and result.file_data:
                             remote_path = f"task_{task_id}/raw/{result.file_name}"
-                            storage_path = storage.upload_file(result.local_path, remote_path)
+                            # 直接上传字节数据，不经过本地磁盘
+                            storage_path = storage.upload_bytes(
+                                result.file_data,
+                                remote_path,
+                                result.content_type or 'application/octet-stream'
+                            )
 
                             # 状态设为 downloaded（等待重命名）
                             target_db.update_file_download(
@@ -166,13 +172,7 @@ def chrome_worker(worker_id, task_queue, result_dict, config, stop_event):
                                 file_size=result.file_size
                             )
                             downloaded_count += 1
-                            logger.info(f"[Worker-{worker_id}] 下载成功: {result.file_name}")
-
-                            # 删除本地临时文件
-                            try:
-                                os.remove(result.local_path)
-                            except:
-                                pass
+                            logger.info(f"[Worker-{worker_id}] 上传成功: {result.file_name}")
                         else:
                             target_db.update_file_download(file_id, 'failed', error_message=result.error_message)
 

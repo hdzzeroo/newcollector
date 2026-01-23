@@ -22,6 +22,8 @@ class DownloadResult:
     file_size: Optional[int]
     file_name: Optional[str]
     error_message: Optional[str] = None
+    file_data: Optional[bytes] = None  # 内存中的文件数据（流式上传用）
+    content_type: Optional[str] = None  # MIME类型
 
 
 class FileDownloader:
@@ -216,6 +218,117 @@ class FileDownloader:
                 local_path=local_path,
                 file_size=file_size,
                 file_name=filename
+            )
+
+        except requests.Timeout:
+            return DownloadResult(
+                success=False,
+                url=url,
+                local_path=None,
+                file_size=None,
+                file_name=None,
+                error_message=f"下载超时 ({self.timeout}s)"
+            )
+        except requests.RequestException as e:
+            return DownloadResult(
+                success=False,
+                url=url,
+                local_path=None,
+                file_size=None,
+                file_name=None,
+                error_message=f"请求错误: {str(e)}"
+            )
+        except Exception as e:
+            return DownloadResult(
+                success=False,
+                url=url,
+                local_path=None,
+                file_size=None,
+                file_name=None,
+                error_message=f"未知错误: {str(e)}"
+            )
+
+    def download_to_memory(self, url: str) -> DownloadResult:
+        """
+        下载文件到内存（不写入磁盘）
+        用于流式上传到 Supabase Storage
+
+        Args:
+            url: 文件URL
+
+        Returns:
+            DownloadResult (file_data 包含文件字节数据)
+        """
+        try:
+            print(f"[Download] 开始下载到内存: {url[:80]}...")
+            response = requests.get(url, headers=self.headers,
+                                    timeout=self.timeout, stream=True,
+                                    allow_redirects=True)
+
+            if response.status_code != 200:
+                return DownloadResult(
+                    success=False,
+                    url=url,
+                    local_path=None,
+                    file_size=None,
+                    file_name=None,
+                    error_message=f"HTTP {response.status_code}"
+                )
+
+            # 检查文件大小
+            content_length = response.headers.get('Content-Length')
+            if content_length and int(content_length) > self.max_size:
+                return DownloadResult(
+                    success=False,
+                    url=url,
+                    local_path=None,
+                    file_size=int(content_length),
+                    file_name=None,
+                    error_message=f"文件过大: {int(content_length) / 1024 / 1024:.1f}MB"
+                )
+
+            # 确定文件名
+            filename = self._get_filename_from_headers(response.headers)
+            if not filename:
+                filename = self._get_filename_from_url(url)
+
+            # 获取 Content-Type
+            content_type = response.headers.get('Content-Type', 'application/octet-stream')
+
+            # 确保有正确的扩展名
+            ext = self._get_extension(url, content_type)
+            if not any(filename.lower().endswith(e) for e in self.SUPPORTED_EXTENSIONS):
+                filename += ext
+
+            # 读取到内存
+            chunks = []
+            file_size = 0
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    chunks.append(chunk)
+                    file_size += len(chunk)
+
+                    if file_size > self.max_size:
+                        return DownloadResult(
+                            success=False,
+                            url=url,
+                            local_path=None,
+                            file_size=file_size,
+                            file_name=filename,
+                            error_message=f"文件过大: {file_size / 1024 / 1024:.1f}MB"
+                        )
+
+            file_data = b''.join(chunks)
+            print(f"[Download] 完成: {filename} ({file_size / 1024:.1f}KB)")
+
+            return DownloadResult(
+                success=True,
+                url=url,
+                local_path=None,
+                file_size=file_size,
+                file_name=filename,
+                file_data=file_data,
+                content_type=content_type
             )
 
         except requests.Timeout:
