@@ -1,0 +1,43 @@
+BASE_URL: https://www.tiu.ac.jp/entrance_examination/special/graduate_school/application/
+FORMAT_SCHEMA: Index | FatherIndex | Short_URL | Breadcrumb | Title
+
+--- START OF STRUCTURED DATA ---
+
+# [CLUSTER_GROUP_START: FatherNode 0]
+FatherNode -> 0 | -1 | /entrance_examination/special/graduate_school/application/ | 开始点 | 根节点
+-------------------------
+1 | 0 | https://www.tiu.ac.jp/entrance_examination/special/graduate_school/application/ | None | HOME
+2 | 0 | /entrance_examination | None | 入試情報
+3 | 0 | /entrance_examination/special | None | 入試情報特設サイト
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 1]
+FatherNode -> 1 | 0 | https://www.tiu.ac.jp/entrance_examination/special/graduate_school/application/ | None | HOME
+-------------------------
+11 | 1 | /sports | None | Image/None
+12 | 1 | /department/language | None | Image/None
+13 | 1 | /campus/ikebukuro | None | Image/None
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 2]
+FatherNode -> 2 | 0 | /entrance_examination | None | 入試情報
+-------------------------
+32 | 2 | /entrance_examination/ebook/entrance_examination_guide_2026 | None | 入試ガイド2026
+33 | 2 | /entrance_examination/admission_consultation | None | 受験相談会
+34 | 2 | /entrance_examination/consultation | None | 進学相談会
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 3]
+FatherNode -> 3 | 0 | /entrance_examination/special | None | 入試情報特設サイト
+-------------------------
+46 | 3 | /entrance_examination/result/index.html | None | 2025年度・2024年度 入試結果はこちら
+47 | 3 | /entrance_examination/special/faculty/application | None | Image/None
+48 | 3 | /entrance_examination/special/faculty/procedure | None | Image/None
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 4]
+FatherNode -> 4 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+50 | 4 | /ebook/graduate_school_guide_2026 | None | 大学院案内2026
+51 | 4 | /ebook/youkou_graduate_2026 | None | 大学院入学試験要項
+52 | 4 | /entrance_examination/special/graduate_school/pdf/2026/process_graduate.pdf | None>PDF | 大学院入試
+# [CLUSTER_GROUP_END]
