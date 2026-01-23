@@ -49,7 +49,7 @@ echo ""
 echo "========================================================"
 
 # 进入项目目录
-cd /workspace/pdfcollecter
+cd /workspace/newcollector
 
 # 启动交互式 shell
 exec bash

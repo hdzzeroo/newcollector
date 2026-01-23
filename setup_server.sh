@@ -4,10 +4,10 @@
 # 适用于 RunPod 等 /workspace 持久化的云服务器
 #
 # 使用方法:
-#   curl -sSL https://raw.githubusercontent.com/hdzzeroo/pdfcollecter/main/setup_server.sh | bash
+#   curl -sSL https://raw.githubusercontent.com/hdzzeroo/newcollector/main/setup_server.sh | bash
 #
 # 或者:
-#   wget -qO- https://raw.githubusercontent.com/hdzzeroo/pdfcollecter/main/setup_server.sh | bash
+#   wget -qO- https://raw.githubusercontent.com/hdzzeroo/newcollector/main/setup_server.sh | bash
 #
 
 set -e
@@ -22,12 +22,12 @@ echo ""
 # ============================================================
 
 WORKSPACE="/workspace"
-PROJECT_NAME="pdfcollecter"
+PROJECT_NAME="newcollector"
 PROJECT_DIR="$WORKSPACE/$PROJECT_NAME"
 MINICONDA_DIR="$WORKSPACE/miniconda"
 LOCAL_BIN="$WORKSPACE/.local/bin"
 CONDA_ENV="overview"
-GITHUB_REPO="https://github.com/hdzzeroo/pdfcollecter.git"
+GITHUB_REPO="https://github.com/hdzzeroo/newcollector.git"
 
 # ============================================================
 # 函数
@@ -205,10 +205,10 @@ export PATH="/workspace/.local/bin:/workspace/miniconda/bin:$PATH"
 
 # 快捷命令
 alias activate-overview='source /workspace/miniconda/bin/activate overview'
-alias cd-project='cd /workspace/pdfcollecter'
-alias run-crawler='cd /workspace/pdfcollecter && source /workspace/miniconda/bin/activate overview && python run_crawler.py'
-alias run-renamer='cd /workspace/pdfcollecter && source /workspace/miniconda/bin/activate overview && python run_renamer.py'
-alias status='cd /workspace/pdfcollecter && source /workspace/miniconda/bin/activate overview && python run_crawler.py --status'
+alias cd-project='cd /workspace/newcollector'
+alias run-crawler='cd /workspace/newcollector && source /workspace/miniconda/bin/activate overview && python run_crawler.py'
+alias run-renamer='cd /workspace/newcollector && source /workspace/miniconda/bin/activate overview && python run_renamer.py'
+alias status='cd /workspace/newcollector && source /workspace/miniconda/bin/activate overview && python run_crawler.py --status'
 
 # 自动激活环境
 if [ -f "/workspace/miniconda/bin/activate" ]; then
