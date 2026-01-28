@@ -1,43 +1,103 @@
-BASE_URL: https://www.tiu.ac.jp/entrance_examination/special/graduate_school/application/
+BASE_URL: https://www.aomoricgu.ac.jp/news/g_tp_20251006?topic=%E5%85%A5%E8%A9%A6%E6%83%85%E5%A0%B1&cpID=368
 FORMAT_SCHEMA: Index | FatherIndex | Short_URL | Breadcrumb | Title
 
 --- START OF STRUCTURED DATA ---
 
 # [CLUSTER_GROUP_START: FatherNode 0]
-FatherNode -> 0 | -1 | /entrance_examination/special/graduate_school/application/ | 开始点 | 根节点
+FatherNode -> 0 | -1 | /news/g_tp_20251006?topic=%E5%85%A5%E8%A9%A6%E6%83%85%E5%A0%B1&cpID=368 | 开始点 | 根节点
 -------------------------
-1 | 0 | https://www.tiu.ac.jp/entrance_examination/special/graduate_school/application/ | None | HOME
-2 | 0 | /entrance_examination | None | 入試情報
-3 | 0 | /entrance_examination/special | None | 入試情報特設サイト
+1 | 0 | /application/files/7017/5973/6138/ACGU_examguide_202604_is-1.pdf | None>PDF | 2026年度4月入学　外国人留学生募集要項（PDF形式：1,545.15 KB）
+2 | 0 | /application/files/3617/5972/7854/2026_2_Reason_for_studying.pdf | None>PDF | 【様式2】志望理由書（PDF形式：123.44 KB）
+3 | 0 | /application/files/5117/3440/1848/2025_3_Letter_of_Recommendation.pdf | None>PDF | 【様式3】推薦書（PDF形式：67.54 KB）
 # [CLUSTER_GROUP_END]
 
-# [CLUSTER_GROUP_START: FatherNode 1]
-FatherNode -> 1 | 0 | https://www.tiu.ac.jp/entrance_examination/special/graduate_school/application/ | None | HOME
--------------------------
-11 | 1 | /sports | None | Image/None
-12 | 1 | /department/language | None | Image/None
-13 | 1 | /campus/ikebukuro | None | Image/None
+# [CLUSTER_GROUP_START: FatherNode 5]
+FatherNode -> 5 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+248 | 5 | /acgu-navi/entrance/guide/2026exam | None | 2025.06.10【令和8年度入試】入学試験概要・募集要項等公開
+249 | 5 | /admissions/exam/exam_guide/download | None | 各種様式ダウンロード
+250 | 5 | /index.php/guide/ml | None | Image/None
 # [CLUSTER_GROUP_END]
 
-# [CLUSTER_GROUP_START: FatherNode 2]
-FatherNode -> 2 | 0 | /entrance_examination | None | 入試情報
--------------------------
-32 | 2 | /entrance_examination/ebook/entrance_examination_guide_2026 | None | 入試ガイド2026
-33 | 2 | /entrance_examination/admission_consultation | None | 受験相談会
-34 | 2 | /entrance_examination/consultation | None | 進学相談会
+# [CLUSTER_GROUP_START: FatherNode 114]
+FatherNode -> 114 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+262 | 114 | /application/files/8116/8783/0965/ACGU_Brochure.pdf | None>PDF | Image/None
+263 | 114 | /application/files/8317/3493/6904/acgu_korean_2025.pdf | None>PDF | Image/None
+264 | 114 | /application/files/6817/6662/9152/acgu_course_guide_2026.pdf | None>PDF | 日本語・日本文化研修留学生プログラム　青森中央学院大学コースガイド（日本語版）（PDF形式：1,076.69 KB）
 # [CLUSTER_GROUP_END]
 
-# [CLUSTER_GROUP_START: FatherNode 3]
-FatherNode -> 3 | 0 | /entrance_examination/special | None | 入試情報特設サイト
--------------------------
-46 | 3 | /entrance_examination/result/index.html | None | 2025年度・2024年度 入試結果はこちら
-47 | 3 | /entrance_examination/special/faculty/application | None | Image/None
-48 | 3 | /entrance_examination/special/faculty/procedure | None | Image/None
+# [CLUSTER_GROUP_START: FatherNode 120]
+FatherNode -> 120 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+269 | 120 | /international_exchange/foreignstudent/carrier_support/career_guidance | None | 留学生対象キャリアプランニング・就職ガイダンス
+270 | 120 | /international_exchange/foreignstudent/carrier_support/employment_seminar | None | 留学生限定　企業就職セミナー
+271 | 120 | /international_exchange/foreignstudent/carrier_support/Career-Promotion | None | 留学生就職促進教育プログラム
 # [CLUSTER_GROUP_END]
 
-# [CLUSTER_GROUP_START: FatherNode 4]
-FatherNode -> 4 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
-50 | 4 | /ebook/graduate_school_guide_2026 | None | 大学院案内2026
-51 | 4 | /ebook/youkou_graduate_2026 | None | 大学院入学試験要項
-52 | 4 | /entrance_examination/special/graduate_school/pdf/2026/process_graduate.pdf | None>PDF | 大学院入試
+# [CLUSTER_GROUP_START: FatherNode 123]
+FatherNode -> 123 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+274 | 123 | /application/files/7916/8231/2835/jisseki2023.pdf | None>PDF | これまでの派遣実績（PDF形式：125.69 KB）
+275 | 123 | /application/files/3416/3048/2543/irai_2019.pdf | None>PDF | 留学生派遣依頼書様式（PDF形式：196.22 KB）
+276 | 123 | /application/files/6016/3048/2545/irai_2019.doc | None>PDF | 留学生派遣依頼書様式（MS Word形式：55.00 KB）
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 137]
+FatherNode -> 137 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+281 | 137 | /campuslife/group_activity/designated_clubactivities?ccm_paging_p_b26752=2&ccm_order_by_b26752=cv.cvDatePublic&ccm_order_by_direction_b26752=desc | None | 2
+282 | 137 | /campuslife/group_activity/designated_clubactivities?ccm_paging_p_b26752=3&ccm_order_by_b26752=cv.cvDatePublic&ccm_order_by_direction_b26752=desc | None | 3
+283 | 137 | /campuslife/group_activity/designated_clubactivities?ccm_paging_p_b26752=4&ccm_order_by_b26752=cv.cvDatePublic&ccm_order_by_direction_b26752=desc | None | 4
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 147]
+FatherNode -> 147 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+288 | 147 | /application/files/8916/3091/2685/rule_education_loan_scholarship_20100401.pdf | None>PDF | 教育ローン利子補給奨学金規程（PDF形式：115.84 KB）
+289 | 147 | /application/files/9317/3987/0208/appl_education_loan_scholarship_2024.docx | None>PDF | 教育ローン利子補給奨学金受給申請書（本学園様式）（MS Word形式：23.64 KB）
+290 | 147 | /application/files/4917/3987/0209/appl_education_loan_scholarship_2024.pdf | None>PDF | 教育ローン利子補給奨学金受給申請書（本学園様式）（PDF形式：129.54 KB）
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 184]
+FatherNode -> 184 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+295 | 184 | /application/files/6616/3169/1357/regulation.pdf | None>PDF | 青森中央学院大学同窓会会則（PDF形式：85.98 KB）
+296 | 184 | /application/files/8816/3169/1361/yakuin_acgu.pdf | None>PDF | 青森中央学院大学同窓会　役員名簿（PDF形式：48.36 KB）
+297 | 184 | /application/files/7816/3169/1364/talent.pdf | None>PDF | 人材バンク登録カード（PDF形式：36.24 KB）
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 193]
+FatherNode -> 193 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+299 | 193 | /communications_and_extension/regional_contribution/regional_contribution/visiting-lectures-1 | None | 思春期の生と性
+300 | 193 | /communications_and_extension/regional_contribution/regional_contribution/visiting-lectures-3 | None | 私らしいライフスタイルのために
+301 | 193 | /communications_and_extension/regional_contribution/regional_contribution/visiting-lectures-2-4 | None | 認知症に関する基礎知識
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 208]
+FatherNode -> 208 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+385 | 208 | /application/files/7117/4536/8404/tokutei_nurse2025_entry.pdf | None>PDF | 募集要項（2025年度）（PDF形式：794.61 KB）
+386 | 208 | /application/files/1917/4536/9045/tokutei_nurse2025__1.docx | None>PDF | 1. 研修志願書（様式1）（MS Word形式：26.83 KB）
+387 | 208 | /application/files/1117/4536/9046/tokutei_nurse2025__2.docx | None>PDF | 2. 履歴書（様式2）（MS Word形式：24.97 KB）
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 229]
+FatherNode -> 229 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+393 | 229 | /application/files/8916/5890/7973/ms.pdf | None>PDF | 青森中央学院大学・青森中央短期大学図書館 ミッションステートメント（PDF形式：4,036.55 KB）
+394 | 229 | /application/files/9117/4712/4701/20250401_acgu_acjc_libkitei.pdf | None>PDF | 学校法人青森田中学園図書館利用規程（PDF形式：228.18 KB）
+395 | 229 | /application/files/7116/8430/5332/g_tp_20230401_library.pdf | None>PDF | ご寄贈にあたっての図書館からのお願い（PDF形式：167.58 KB）
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 238]
+FatherNode -> 238 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+402 | 238 | /nortice/g_tp_20251222 | None | 2025.12.22年末年始の窓口業務について
+403 | 238 | /nortice/2025summer | None | 2025.08.068月13日(水)の窓口業務について
+404 | 238 | /nortice/school-fees | None | 2025.06.12授業料等の改定について
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 242]
+FatherNode -> 242 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+408 | 242 | /e-book/2024 | None | 学生便覧（2024年度）
+409 | 242 | /e-book/2023 | None | 学生便覧（2023年度）
+410 | 242 | /e-book/2022 | None | 学生便覧（2022年度）
+# [CLUSTER_GROUP_END]
+
+# [CLUSTER_GROUP_START: FatherNode 247]
+FatherNode -> 247 | -1 | ROOT_OR_EXTERNAL | None | SEED_PAGE
+412 | 247 | /application/files/4417/2532/5181/volunteer2024.pdf | None>PDF | ボランティア募集について（PDF形式：155.57 KB）
+413 | 247 | /application/files/4316/8610/6150/volunteersheet_2023_rei.pdf | None>PDF | 学生ボランティア募集依頼書（PDF形式：356.35 KB）
+414 | 247 | /application/files/7816/8610/6151/volunteersheet_2023_rei_1.docx | None>PDF | 学生ボランティア募集依頼書（MS Word形式：17.10 KB）
 # [CLUSTER_GROUP_END]

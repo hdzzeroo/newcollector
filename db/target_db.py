@@ -5,11 +5,43 @@
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError, DisconnectionError
+from sqlalchemy.pool import NullPool
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Any
 from datetime import datetime
+from functools import wraps
 import hashlib
 import os
+import time
+import logging
+
+logger = logging.getLogger(__name__)
+
+# 连接模式配置
+# Transaction 模式：每次事务结束后连接返回池，支持更多并发
+# Session 模式：连接保持整个会话，连接数有限
+USE_TRANSACTION_MODE = True  # 推荐开启
+
+
+def with_retry(max_retries=3, delay=1):
+    """数据库操作重试装饰器"""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            last_error = None
+            for attempt in range(max_retries):
+                try:
+                    return func(self, *args, **kwargs)
+                except (OperationalError, DisconnectionError, BrokenPipeError, OSError) as e:
+                    last_error = e
+                    logger.warning(f"数据库操作失败 (尝试 {attempt + 1}/{max_retries}): {e}")
+                    # 重置连接
+                    self._reconnect()
+                    time.sleep(delay * (attempt + 1))
+            raise last_error
+        return wrapper
+    return decorator
 
 
 @dataclass
@@ -69,7 +101,10 @@ class FileRecord:
 class TargetDatabase:
     """Supabase PostgreSQL 连接器"""
 
-    DEFAULT_URL = "postgresql://postgres:bnly4zU3k4pRmerH@db.orqthdhhyqtksrtxweoc.supabase.co:5432/postgres"
+    # Transaction 模式 (端口 6543)：每次事务结束后连接返回池，支持更多并发
+    # Session 模式 (端口 5432)：连接持续整个会话，连接数有限
+    DEFAULT_URL_TRANSACTION = "postgresql://postgres.orqthdhhyqtksrtxweoc:bnly4zU3k4pRmerH@aws-1-ap-south-1.pooler.supabase.com:6543/postgres"
+    DEFAULT_URL_SESSION = "postgresql://postgres.orqthdhhyqtksrtxweoc:bnly4zU3k4pRmerH@aws-1-ap-south-1.pooler.supabase.com:5432/postgres"
 
     def __init__(self, database_url: str = None):
         """
@@ -78,22 +113,65 @@ class TargetDatabase:
         Args:
             database_url: 数据库连接URL，默认使用环境变量或内置URL
         """
-        self.database_url = database_url or os.getenv('TARGET_DB_URL', self.DEFAULT_URL)
+        # 优先使用环境变量，否则根据模式选择默认 URL
+        env_url = os.getenv('TARGET_DB_URL')
+        if env_url:
+            # 如果启用 Transaction 模式，自动将端口 5432 替换为 6543
+            if USE_TRANSACTION_MODE and ':5432/' in env_url:
+                self.database_url = env_url.replace(':5432/', ':6543/')
+                logger.info("已切换到 Transaction 模式 (端口 6543)")
+            else:
+                self.database_url = env_url
+        else:
+            self.database_url = self.DEFAULT_URL_TRANSACTION if USE_TRANSACTION_MODE else self.DEFAULT_URL_SESSION
+
         self.engine = None
         self.Session = None
 
     def connect(self):
         """建立数据库连接"""
         if self.engine is None:
-            self.engine = create_engine(
-                self.database_url,
-                pool_size=5,
-                max_overflow=10,
-                pool_timeout=30,
-                pool_recycle=1800
-            )
+            if USE_TRANSACTION_MODE:
+                # Transaction 模式：使用 NullPool，不维护本地连接池
+                # 每次操作创建连接，用完立即释放，避免连接数超限
+                self.engine = create_engine(
+                    self.database_url,
+                    poolclass=NullPool,  # 不使用连接池
+                    connect_args={
+                        "connect_timeout": 10,
+                        "options": "-c statement_timeout=30000"  # 30秒超时
+                    }
+                )
+            else:
+                # Session 模式：使用小型连接池
+                self.engine = create_engine(
+                    self.database_url,
+                    pool_size=2,
+                    max_overflow=3,
+                    pool_timeout=30,
+                    pool_recycle=300,
+                    pool_pre_ping=True,
+                    connect_args={
+                        "keepalives": 1,
+                        "keepalives_idle": 30,
+                        "keepalives_interval": 10,
+                        "keepalives_count": 5
+                    }
+                )
             self.Session = sessionmaker(bind=self.engine)
         return self.engine
+
+    def _reconnect(self):
+        """重新建立数据库连接"""
+        logger.info("正在重新连接数据库...")
+        try:
+            if self.engine:
+                self.engine.dispose()
+        except:
+            pass
+        self.engine = None
+        self.Session = None
+        self.connect()
 
     def close(self):
         """关闭数据库连接"""
@@ -104,6 +182,7 @@ class TargetDatabase:
 
     # ==================== 任务管理 ====================
 
+    @with_retry(max_retries=3, delay=1)
     def create_task(self, source_link_id: int, source_url: str, school_name: str = None) -> int:
         """
         创建爬取任务
@@ -142,6 +221,7 @@ class TargetDatabase:
             conn.commit()
             return result.scalar()
 
+    @with_retry(max_retries=3, delay=1)
     def update_task_status(self, task_id: int, status: str, **kwargs):
         """
         更新任务状态
@@ -173,6 +253,7 @@ class TargetDatabase:
             conn.execute(text(sql), params)
             conn.commit()
 
+    @with_retry(max_retries=3, delay=1)
     def get_task_by_source_id(self, source_link_id: int) -> Optional[TaskRecord]:
         """根据源link ID获取任务"""
         self.connect()
@@ -297,6 +378,7 @@ class TargetDatabase:
 
     # ==================== 节点管理 ====================
 
+    @with_retry(max_retries=3, delay=1)
     def batch_insert_nodes(self, task_id: int, nodes: List[Dict[str, Any]]):
         """
         批量插入节点数据
@@ -363,6 +445,7 @@ class TargetDatabase:
                 )
             conn.commit()
 
+    @with_retry(max_retries=3, delay=1)
     def mark_nodes_pruned(self, task_id: int, pruned_indices: List[int]):
         """
         标记剪枝保留的节点
@@ -391,6 +474,7 @@ class TargetDatabase:
             )
             conn.commit()
 
+    @with_retry(max_retries=3, delay=1)
     def get_file_nodes(self, task_id: int, pruned_only: bool = True) -> List[NodeRecord]:
         """
         获取文件类型的节点
@@ -450,6 +534,7 @@ class TargetDatabase:
 
     # ==================== 文件管理 ====================
 
+    @with_retry(max_retries=3, delay=1)
     def create_file_record(self, task_id: int, node_id: int, original_url: str,
                            original_name: str = None, file_extension: str = None) -> int:
         """
@@ -478,6 +563,7 @@ class TargetDatabase:
             conn.commit()
             return result.scalar()
 
+    @with_retry(max_retries=3, delay=1)
     def update_file_download(self, file_id: int, status: str,
                              storage_path: str = None, file_size: int = None,
                              error_message: str = None):
